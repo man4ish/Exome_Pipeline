@@ -96,13 +96,13 @@ int main(int argc, char** argv)
   statfile << "Type of Sequencer\tHiSeq2500\n";
   statfile.close();
 
-  ifstream infastqc("18-0700_1_fastqc/fastqc_data.txt");
+  /*ifstream infastqc("18-0700_1_fastqc/fastqc_data.txt");
   while (infastqc)
   {
       char recline[1000];
        cout <<infastqc.getline(recline,1000) << endl;
   }   
-  infastqc.close();
+  infastqc.close();*/
 
  
   unsigned long Acount=0, Ccount=0, Gcount=0, Tcount=0, TargetRegions=0;
