@@ -24,7 +24,7 @@ fi
 done;
 
 
-for code in gen_statistics.sh get_statistics.pl SGP_generate_statistics_v2 run_pipeline_v1.sh;
+for code in gen_statistics.sh get_statistics.pl SGP_generate_statistics_v3 gen_plot.R report_generator.rmd gen_coverage_table.pl run_pipeline_v1.sh;
 do echo $code;
 
 if [ -f "$code" ]
