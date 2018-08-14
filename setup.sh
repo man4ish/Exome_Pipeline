@@ -10,7 +10,7 @@ path=/illumina/SGP_illumina_suite     #please change path to absolute path on th
 ln -s $path/softwares/knitr_1.20.tar.gz .
 ln -s $path/softwares/rmarkdown_1.10.tar.gz .
 ln -s $path/softwares/reshape_0.8.7.tar.gz .
-ln -s $path/script/SGP_generate_statistics_v2.cpp .
+ln -s $path/script/SGP_generate_statistics_v3.cpp .
 
 R CMD INSTALL knitr_1.20.tar.gz
 R CMD INSTALL rmarkdown_1.10.tar.gz
