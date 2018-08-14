@@ -9,12 +9,14 @@ sudo apt-get install imagemagick                     # install imagemagick for c
 path=/illumina/SGP_illumina_suite     #please change path to absolute path on the machine
 ln -s $path/softwares/knitr_1.20.tar.gz .
 ln -s $path/softwares/rmarkdown_1.10.tar.gz .
+ln -s $path/softwares/reshape_0.8.7.tar.gz .
 ln -s $path/script/SGP_generate_statistics_v2.cpp .
 
 R CMD INSTALL knitr_1.20.tar.gz
 R CMD INSTALL rmarkdown_1.10.tar.gz
+R CMD INSTALL reshape_0.8.7.tar.gz
 
-g++ SGP_generate_statistics_v2.cpp -o SGP_generate_statistics_v2
+g++ SGP_generate_statistics_v3.cpp -o SGP_generate_statistics_v3
 
 ln -s $path/script/run_pipeline_v1.sh .
 ln -s $path/db/1000G_phase1.indels.hg19.sites.vcf .
