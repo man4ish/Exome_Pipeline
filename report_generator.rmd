@@ -1,0 +1,218 @@
+---
+output: html_document
+title: "Sequencing & \n\nBioinformatics Report"
+classoption: a4paper
+params: 
+  sample: ""
+---
+
+
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 12px;
+  }
+td {  /* Table  */
+  font-size: 10px;
+}
+h1.title {
+  font-size: 30px;
+}
+h1 { /* Header 1 */
+  font-size: 18px;
+}
+h2 { /* Header 2 */
+    font-size: 16px;
+}
+h3 { /* Header 3 */
+  font-size: 14px;
+}
+h4 {
+  font-size: 12px;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri(file.path( "logo.png")), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:0px;')
+```
+
+
+```{r plot, echo=FALSE, warning=FALSE}
+samplename=params$sample;
+```
+
+<br><br><br><br><br>
+
+
+## 1.1 General Summary
+
+
+````{r echo=FALSE, message=FALSE}
+library(rmarkdown)
+library(knitr)
+library(dplyr)
+library(kableExtra)
+statdat<-read.table("Sample_Run_Information",sep="\t",check.names=FALSE)
+stats = kable(statdat, format="html") %>%
+kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+gsub("<thead>.*</thead>", "", stats)
+#column_spec(stats[,1], 1:2, width = "20em", bold = TRUE)
+#kable(statdat) 
+````
+
+##1. 2. Sequence Statistics
+#### 1. 2. 1. Statistics
+
+````{r echo=FALSE}
+dat<-read.table("Statistics_Information",sep="\t",check.names=FALSE);
+col1<-as.character(dat[,1])
+col2<-prettyNum(dat[,2], scientific=FALSE, big.mark=",")
+dat<-cbind(col1,col2)
+#dat<-read.table("Statistics_Information",sep="\t",check.names=FALSE,header=TRUE)
+info = kable(dat, format="html") %>%
+kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+gsub("<thead>.*</thead>", "", info)
+#kable(dat) 
+````
+
+<br>
+
+#### 1. 2. 2. Read1 Quality by Cycle
+
+```{r pressure1, echo=FALSE, fig.cap="", out.width = '60%'}
+knitr::include_graphics(paste0(samplename,".1_fastqc/Images/per_base_quality.png"))
+```
+
+<br><br><br><br><br><br><br>
+
+#### 1. 2. 3. Read2 Quality by Cycle
+```{r pressure2, echo=FALSE, fig.cap="", out.width = '60%'}
+knitr::include_graphics(paste0(samplename,".2_fastqc/Images/per_base_quality.png"))
+```
+<br><br>
+
+## 1.3 Pre-alignment Statistics
+````{r echo=FALSE, message=FALSE}
+library(dplyr)
+library(kableExtra)
+dat<-read.table("Pre_Alignment_Statistics",sep="\t",header=TRUE)
+col1<-as.character(dat[,1])
+col2<-prettyNum(dat[,2], scientific=FALSE, big.mark=",")
+pre_align<-cbind(col1,col2)
+#pre_align<-read.table("Pre_alignment_Statistics",sep="\t",check.names=FALSE,header=TRUE)
+x = kable(pre_align, format="html") %>%
+kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+gsub("<thead>.*</thead>", "", x)
+#kable(pre_align) 
+````
+
+<ul>
+  <li>Total yield: {total number of reads} * {Average read length}</li>
+  <li>Target regions : Target region size</li>
+  <li>Average throughput depth of target regions (X) : {Total yield} / {Target regions}</li>
+</ul> 
+
+## 1. 4. Post-alignment Statistics
+````{r echo=FALSE}
+post_align<-read.table("Post-alignment_Statistics",sep="\t",check.names=FALSE,header=TRUE)
+pre_align<-read.table("Pre_alignment_Statistics",sep="\t",check.names=FALSE,header=FALSE)
+post_align<-read.table("Post-alignment_Statistics",sep="\t",header=FALSE)
+outtable <- data.frame(a = character(), b = numeric())
+outtable <- rbind(outtable, data.frame(a = post_align[1,1], b = prettyNum(post_align[1,2], scientific=FALSE, big.mark=",") ))
+outtable <- rbind(outtable, data.frame(a = "% Initial Mappable Reads", b = prettyNum(as.numeric(as.character(post_align[1,2]))*100/as.numeric(as.character(pre_align[1,2])),scientific=FALSE, big.mark=",")))
+outtable <- rbind(outtable, data.frame(a = post_align[2,1], b = prettyNum(post_align[2,2],scientific=FALSE, big.mark=",")))
+outtable <- rbind(outtable, data.frame(a = "% Non-Redundant Reads", b = prettyNum((as.numeric(as.character(post_align[2,2]))*100/as.numeric(as.character(pre_align[1,2]))), scientific=FALSE, big.mark=",")))
+outtable <- rbind(outtable, data.frame(a = post_align[3,1], b = prettyNum(post_align[3,2], scientific=FALSE, big.mark=",")))
+outtable <- rbind(outtable, data.frame(a = "% On-Target Reads", b = prettyNum((as.numeric(as.character(post_align[3,2]))*100/as.numeric(as.character(pre_align[1,2]))),scientific=FALSE, big.mark=",")))
+outtable <- rbind(outtable, data.frame(a = post_align[4,1], b = prettyNum((as.numeric(post_align[4,2]))*(as.numeric(pre_align[2,2])), scientific=FALSE, big.mark=",")))
+#outtable <- rbind(outtable, data.frame(a = "% Mean Depth of Target Regions (X)", b = prettyNum((as.numeric(as.character(post_align[4,2]))*100/as.numeric(as.character(pre_align[4,2]))),scientific=FALSE, big.mark=","))
+outtable <- rbind(outtable, data.frame(a = "% Mean Depth of Target Regions (X)", b = prettyNum((as.numeric(as.character(post_align[4,2]))*100/as.numeric(as.character(pre_align[4,2]))),scientific=FALSE, big.mark=",")))
+
+
+x = kable(outtable, format="html") %>%
+kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+gsub("<thead>.*</thead>", "", x)
+
+
+#kable(outtable) 
+```` 
+
+<ul>
+  <li>Initial Mappable Reads : Number of mapped reads to human genome variants.</li>
+  <li>% Initial Mappable Reads: 100 * { Initial mappable reads} / {Total reads}</li>
+  <li>Non-Redundant Reads : Number of de-duplicate reads from Picard tools</li>
+  <li>% Non-Redundant Reads: 100 * {Non-redundant reads } / { Initial mappable reads}</li>
+  <li>On-Target Reads: Number of reads mapped to target regions</li>
+  <li>% On-Target Reads: 100 * {On-target reads} / {Non-redundant reads}</li>
+  <li>On-Target Yield (bp) : The sum of the bases in the final alignment to the target regions</li>
+  <li>Mean Depth of Target Regions (X) : {On-target yield} / {Target regions}</li>
+</ul> 
+
+<br>
+
+##1.5 Alignment Coverage
+
+###1.5.1. Histogram of Depth Distribution in Target Regions
+
+<img src="target_hist.png" alt="Girl in a jacket" align="middle" height="400" width="400">
+
+
+###1.5.2. Cumulative Depth Distribution in Target Regions
+<img src="coverage.png" alt="G" align="middle" height="400" width="400">
+````{r echo=FALSE}
+summary<-read.table("coverage_summary",sep="\t",check.names=FALSE,header=TRUE)
+kable(summary, format="html") %>%
+kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+````
+-Coverage : The percentage of bases in target regions with a depth of coverage or greater
+
+
+
+##1.6 Insert Statistics
+
+ 
+
+<img src="insert_size_histogram.png" alt="photo" align="middle"/ height="400" width="400"> 
+<br>
+
+````{r echo=FALSE}
+insert_data<-read.table("metrics.table",sep="\t",check.names=FALSE)
+ins_data = kable(insert_data, format="html") %>%
+kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+gsub("<thead>.*</thead>", "", ins_data)
+
+#kable(insert_data,align=c(rep('l',times=2))) 
+
+````
+
+
+#2. SNP & INDEL
+
+````{r echo=FALSE}
+snp_indel<-read.table("snp_indel_statistics",sep="\t",check.names=FALSE)
+sindel = kable(snp_indel, format="html") %>%
+kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+gsub("<thead>.*</thead>", "", sindel)
+
+#kable(snp_indel) 
+
+```` 
+
+<ul>
+<li>Het/Hom Ratio : Ratio of number of heterozygous variants to number of homozygous variants.</li>
+<li>Ts/Tv Ratio : Ratio of transition rate of SNVs that pass the quality filters divided by transversion
+rate of SNVs that pass the quality filters. Transition rate of SNVs that pass the quality filters divided
+by transversion rate of SNVs that pass the quality filters. Transitions are interchanges of purines
+(A,G) or of pyrimidines (C, T). Transversions are interchanges between purine and pyrimidine bases
+(for example, A to T).</li>  
+</ul> 
+
