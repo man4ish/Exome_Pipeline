@@ -12,5 +12,5 @@ sh check_dependencies.sh
 #Step3. Run the pipeline
 sh run_pipeline_allchr.sh  <fastq1> <fastq2>
 #step4. Generate QC reports
-./SGP_generate_statistics_v2 <fastq1> <fastq2> SureSelect_v5.bed 
+./SGP_generate_statistics_v3 <fastq1> <fastq2> SureSelect_v5.bed <param.txt>
 
