@@ -1,0 +1,4 @@
+Sample	S671Nr1
+Order Number	1802CNHP-0001
+Capture Kit	SureSelect_V5
+Type of Sequencer	HiSeq2500
