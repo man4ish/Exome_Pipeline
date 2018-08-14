@@ -1,4 +1,10 @@
 #pipeline for processing exome data.
+#Requirements:
+#Programming Languages:
+R Language
+C++ 
+Java (verison 8)
+
 #Step1. Install all dependencies and softwares.
 sh setup.sh                                          #pls modify SGP_illumina_suite pth in setup.sh after copying on different machine.
 #Step2. Check all dependencies.
